@@ -26,7 +26,7 @@ const registrationUser = async (req, res, next) => {
       accountNumber,
       token,
     });
-    // sendSms(phone, verifyCode);
+    sendSms(phone, verifyCode);
   } catch (error) {
     if (error.code === 11000) {
       next(HttpError(409, 'Email in use!'));
@@ -51,4 +51,18 @@ const verifyUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registrationUser, verifyUser };
+const resendCode = async (req, res, next) => {
+  try {
+    if (req.user.verified) {
+      throw HttpError(400, 'User is verified yet!');
+    }
+    const verifyCode = codeGenerator();
+    await User.findByIdAndUpdate(req.user._id, { verifyCode });
+    res.status(200).json({ message: 'Code updated!' });
+    sendSms(req.user.phone, verifyCode);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { registrationUser, verifyUser, resendCode };
