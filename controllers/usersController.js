@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const sendSms = require('../services/smsSender');
 const User = require('../models/users');
 const { HttpError } = require('../helpers');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = process.env;
 
 const registrationUser = async (req, res, next) => {
   try {
@@ -15,11 +17,16 @@ const registrationUser = async (req, res, next) => {
       verifyCode,
       accountNumber,
     });
+    const payload = { id: result._id };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '30d' });
+    await User.findByIdAndUpdate(result._id, { token });
     res.status(201).json({
       id: result._id,
       name: result.name,
+      accountNumber,
+      token,
     });
-    sendSms(phone, verifyCode);
+    // sendSms(phone, verifyCode);
   } catch (error) {
     if (error.code === 11000) {
       next(HttpError(409, 'Email in use!'));
