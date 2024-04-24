@@ -17,6 +17,7 @@ const userSchema = new Schema(
     },
     phone: {
       type: String,
+      unique: true,
       required: [true, 'Phone number is required!'],
     },
     token: {
@@ -29,6 +30,14 @@ const userSchema = new Schema(
     },
     verifyCode: {
       type: Number,
+    },
+    balance: {
+      type: Number,
+      default: 0,
+    },
+    accountNumber: {
+      type: Number,
+      default: null,
     },
   },
   { versionKey: false, timestamps: true }
