@@ -38,6 +38,9 @@ const registrationUser = async (req, res, next) => {
 const verifyUser = async (req, res, next) => {
   try {
     const { verifyCode } = req.body;
+    if (req.user.verified) {
+      throw HttpError(400, 'User is verified yet!');
+    }
     if (verifyCode !== req.user.verifyCode) {
       throw HttpError(400, 'Wrong code!');
     }
