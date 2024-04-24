@@ -8,10 +8,12 @@ const registrationUser = async (req, res, next) => {
     const { password, phone } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const verifyCode = Math.floor(Math.random() * 9000) + 1000;
+    const accountNumber = Math.floor(Math.random() * (1e16 - 1e15) + 1e15);
     const result = await User.create({
       ...req.body,
       password: hashedPassword,
       verifyCode,
+      accountNumber,
     });
     res.status(201).json({
       id: result._id,
