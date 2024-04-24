@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 const { HttpError } = require('../helpers');
@@ -16,6 +17,7 @@ const isValidToken = async (req, res, next) => {
       next(HttpError(401));
     }
     req.user = user;
+    next();
   } catch (error) {
     next(HttpError(401));
   }

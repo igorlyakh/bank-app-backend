@@ -1,3 +1,4 @@
 const HttpError = require('./HttpErrors');
+const codeGenerator = require('./codeGenerator');
 
-module.exports = { HttpError };
+module.exports = { HttpError, codeGenerator };

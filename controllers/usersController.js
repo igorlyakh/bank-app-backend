@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const sendSms = require('../services/smsSender');
 const User = require('../models/users');
-const { HttpError } = require('../helpers');
+const { HttpError, codeGenerator } = require('../helpers');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
@@ -9,7 +9,7 @@ const registrationUser = async (req, res, next) => {
   try {
     const { password, phone } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verifyCode = Math.floor(Math.random() * 9000) + 1000;
+    const verifyCode = codeGenerator();
     const accountNumber = Math.floor(Math.random() * (1e16 - 1e15) + 1e15);
     const result = await User.create({
       ...req.body,
@@ -38,11 +38,10 @@ const registrationUser = async (req, res, next) => {
 const verifyUser = async (req, res, next) => {
   try {
     const { verifyCode } = req.body;
-    const user = await User.findOne({ verifyCode });
-    if (!user) {
+    if (verifyCode !== req.user.verifyCode) {
       throw HttpError(400, 'Wrong code!');
     }
-    await User.findByIdAndUpdate(user._id, {
+    await User.findByIdAndUpdate(req.user._id, {
       verified: true,
       verifyCode: null,
     });
