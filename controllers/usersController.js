@@ -17,6 +17,9 @@ const registrationUser = async (req, res, next) => {
       verifyCode,
       accountNumber,
     });
+    setTimeout(async () => {
+      await User.findByIdAndUpdate(result._id, { verifyCode: null });
+    }, 300000);
     const payload = { id: result._id };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '30d' });
     await User.findByIdAndUpdate(result._id, { token });
@@ -38,13 +41,14 @@ const registrationUser = async (req, res, next) => {
 const verifyUser = async (req, res, next) => {
   try {
     const { verifyCode } = req.body;
-    if (req.user.verified) {
+    const { user } = req;
+    if (user.verified) {
       throw HttpError(400, 'User is verified yet!');
     }
-    if (verifyCode !== req.user.verifyCode) {
+    if (verifyCode !== user.verifyCode) {
       throw HttpError(400, 'Wrong code!');
     }
-    await User.findByIdAndUpdate(req.user._id, {
+    await User.findByIdAndUpdate(user._id, {
       verified: true,
       verifyCode: null,
     });
@@ -56,13 +60,17 @@ const verifyUser = async (req, res, next) => {
 
 const resendCode = async (req, res, next) => {
   try {
-    if (req.user.verified) {
+    const { user } = req;
+    if (user.verified) {
       throw HttpError(400, 'User is verified yet!');
     }
     const verifyCode = codeGenerator();
-    await User.findByIdAndUpdate(req.user._id, { verifyCode });
+    await User.findByIdAndUpdate(user._id, { verifyCode });
     res.status(200).json({ message: 'Code updated!' });
-    sendSms(req.user.phone, verifyCode);
+    setTimeout(async () => {
+      await User.findByIdAndUpdate(user._id, { verifyCode: null });
+    }, 300000);
+    sendSms(user.phone, verifyCode);
   } catch (error) {
     next(error);
   }
