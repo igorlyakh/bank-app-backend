@@ -1,3 +1,4 @@
+require('colors');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -25,12 +26,14 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(DB_HOST)
   .then(() => {
-    console.log('Database connection successful!');
+    console.log('[Server] Database connection successful!'.magenta);
     app.listen(PORT, () => {
-      console.log(`Server started on port ${PORT}!`);
+      console.log(`[Server] Server started on port ${PORT}!`.magenta);
     });
   })
   .catch(() => {
-    console.log('Connection to DB is failed! Server is not started!');
+    console.log(
+      '[Server] Connection to DB is failed! Server is not started!'.red
+    );
     process.exit(1);
   });
