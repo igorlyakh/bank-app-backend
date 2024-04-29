@@ -40,8 +40,9 @@ const userSchema = new Schema(
       default: null,
     },
     cards: {
-      type: Types.ObjectId,
+      type: [Types.ObjectId],
       ref: 'cards',
+      default: null,
     },
   },
   { versionKey: false, timestamps: true }
