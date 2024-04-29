@@ -6,6 +6,7 @@ const {
   resendCode,
   sendMoney,
   logout,
+  login,
 } = require('../controllers/usersController');
 
 const userRouter = express.Router();
@@ -15,5 +16,6 @@ userRouter.put('/verification', isValidToken, verifyUser);
 userRouter.put('/reverification', isValidToken, resendCode);
 userRouter.post('/send', isValidToken, sendMoney);
 userRouter.post('/logout', isValidToken, logout);
+userRouter.post('/login', login);
 
 module.exports = userRouter;
