@@ -2,7 +2,7 @@ require('colors');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { userRouter } = require('./routes');
+const { userRouter, cardRouter } = require('./routes');
 require('dotenv').config();
 
 const { DB_HOST, PORT = 3000 } = process.env;
@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/user', userRouter);
+app.use('/api/card', cardRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: 'Route not found' });

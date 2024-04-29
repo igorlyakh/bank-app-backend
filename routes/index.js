@@ -1,3 +1,4 @@
 const userRouter = require('./userRoute');
+const cardRouter = require('./cardRouter');
 
-module.exports = { userRouter };
+module.exports = { userRouter, cardRouter };
