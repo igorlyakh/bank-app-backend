@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 const userSchema = new Schema(
   {
@@ -38,6 +38,10 @@ const userSchema = new Schema(
     accountNumber: {
       type: Number,
       default: null,
+    },
+    cards: {
+      type: Types.ObjectId,
+      ref: 'cards',
     },
   },
   { versionKey: false, timestamps: true }
