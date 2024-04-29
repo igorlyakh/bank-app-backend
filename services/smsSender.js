@@ -4,7 +4,7 @@ const { TWILIO_AUTH_TOKEN, TWILIO_ACCOUNT_SID, TWILIO_NUMBER } = process.env;
 
 const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-const sendSms = (number, code) => {
+const smsSender = (number, code) => {
   client.messages.create({
     body: `Your verify code: ${code}`,
     from: TWILIO_NUMBER,
@@ -12,4 +12,4 @@ const sendSms = (number, code) => {
   });
 };
 
-module.exports = sendSms;
+module.exports = smsSender;
