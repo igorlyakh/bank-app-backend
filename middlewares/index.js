@@ -1,3 +1,4 @@
 const isValidToken = require('./isValidToken');
+const isValidId = require('./isValidId');
 
-module.exports = { isValidToken };
+module.exports = { isValidToken, isValidId };
